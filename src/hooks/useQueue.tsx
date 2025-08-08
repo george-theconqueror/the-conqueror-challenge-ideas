@@ -2,10 +2,12 @@ import { useState, useEffect, useTransition } from 'react';
 
 import { Title, RandomTitlesResponse } from '../types';
 
-export const useQueue = (baseUrl: string) => {
+export const useQueue = () => {
   const [queue, setQueue] = useState<Title[]>([]);
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
   const fetchRandomTitles = async () => {
     if (isPending) return;

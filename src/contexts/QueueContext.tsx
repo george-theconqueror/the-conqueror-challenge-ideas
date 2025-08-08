@@ -18,11 +18,10 @@ const QueueContext = createContext<QueueContextType | undefined>(undefined);
 
 interface QueueProviderProps {
   children: ReactNode;
-  baseUrl: string;
 }
 
-export function QueueProvider({ children, baseUrl }: QueueProviderProps) {
-  const queueState = useQueue(baseUrl);
+export function QueueProvider({ children }: QueueProviderProps) {
+  const queueState = useQueue();
 
   return (
     <QueueContext.Provider value={queueState}>
