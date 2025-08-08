@@ -1,0 +1,184 @@
+"use client"
+
+import { useState, useEffect } from "react"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { QuestionCard } from "./QuestionCard"
+import { GameRules } from "./GameRules"
+import { useQueueContext } from "@/contexts/QueueContext"
+import { Title } from "@/types"
+import { updateEloRatings } from "@/lib/api"
+import Image from "next/image"
+
+export function GameLogic() {
+  const { queue, dequeue, peek, isLoading, error } = useQueueContext();
+  const [currentTitles, setCurrentTitles] = useState<[Title, Title] | null>(null)
+  const [selectedOption, setSelectedOption] = useState<0 | 1 | null>(null)
+  const [gameStarted, setGameStarted] = useState(false)
+  const [showResults, setShowResults] = useState(false)
+
+  // Get next pair of titles
+  const getNextPair = (): [Title, Title] | null => {
+    if (queue.length < 2) {
+      return null;
+    }
+    
+    // Get both titles at once using peek
+    const titles = peek();
+    if (!titles) {
+      return null;
+    }
+    
+    const [title1, title2] = titles;
+    
+    // Remove both titles from queue
+    dequeue();
+    dequeue();
+    
+    return [title1, title2];
+  };
+
+  // Initialize game with first pair
+  const startNewGame = () => {
+    const pair = getNextPair();
+    if (pair) {
+      setCurrentTitles(pair);
+      setSelectedOption(null);
+      setGameStarted(true);
+      setShowResults(false);
+    }
+  };
+
+  // Load next pair when needed
+  const loadNextPair = () => {
+    const pair = getNextPair();
+    if (pair) {
+      setCurrentTitles(pair);
+    }
+  };
+
+  // Handle option selection
+  const handleOptionSelect = async (option: 0 | 1) => {
+    if (selectedOption !== null) return // Prevent multiple selections
+
+    setSelectedOption(option);
+
+    // Update Elo ratings if we have current titles
+    if (currentTitles) {
+      const [title1, title2] = currentTitles;
+      
+      try {
+        const success = await updateEloRatings(title1.id, title2.id, option);
+        if (!success) {
+          console.error('Failed to update Elo ratings');
+        }
+      } catch (error) {
+        console.error('Error updating Elo ratings:', error);
+      }
+    }
+
+    // Show results for 3 seconds
+    setShowResults(true);
+    setTimeout(() => {
+      setShowResults(false);
+      setSelectedOption(null);
+      
+      // Load next pair
+      loadNextPair();
+    }, 3000);
+  };
+
+  // Start game automatically on component mount
+  useEffect(() => {
+    if (!gameStarted && !isLoading && queue.length >= 2) {
+      startNewGame();
+    }
+  }, [gameStarted, isLoading, queue.length]);
+
+  if (!gameStarted) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900">
+        <Card className="w-full max-w-md mx-4 border-yellow-400/30 bg-zinc-800/50 backdrop-blur-sm">
+          <CardHeader>
+            <CardTitle className="text-center text-3xl text-yellow-400">Would You Rather</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <p className="text-center text-yellow-400/70">
+              Make tough choices and see how others voted!
+            </p>
+            {isLoading ? (
+              <p className="text-center text-yellow-400/50">Loading titles...</p>
+            ) : error ? (
+              <p className="text-center text-red-400">Error: {error}</p>
+            ) : queue.length < 2 ? (
+              <p className="text-center text-yellow-400/50">Not enough titles available</p>
+            ) : (
+              <Button onClick={startNewGame} className="w-full bg-yellow-400 text-zinc-800 hover:bg-yellow-500" size="lg">
+                Start Game
+              </Button>
+            )}
+            <div className="flex justify-center">
+              <GameRules />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (!currentTitles) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900">
+        <Card className="w-full max-w-md border-yellow-400/30 bg-zinc-800/50 backdrop-blur-sm">
+          <CardHeader>
+            <CardTitle className="text-center text-yellow-400">Loading...</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-center text-yellow-400/70">
+              Preparing your questions...
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  const [title1, title2] = currentTitles;
+  
+  return (
+    <div className="h-screen flex flex-col bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900">
+      {/* Header */}
+      <div className="flex justify-between items-center p-4 bg-zinc-900/80 backdrop-blur-sm border-b border-yellow-400/30">
+        <div className="flex items-center gap-3">
+          <Image
+            src="/Conqueror Logo.png"
+            alt="Conqueror Logo"
+            width={32}
+            height={32}
+            className="rounded-sm"
+          />
+          <h1 className="text-xl font-bold text-yellow-400">
+            The Conqueror Virtual Challenges Ideas
+          </h1>
+        </div>
+        
+      </div>
+
+      {/* Question Card - Full Screen */}
+      <div className="flex-1">
+        <QuestionCard
+          title1={title1}
+          title2={title2}
+          onSelect={handleOptionSelect}
+          selectedOption={selectedOption}
+          showResults={showResults}
+        />
+      </div>
+
+      {/* Floating Help Button - Bottom Right Corner */}
+      <div className="fixed bottom-6 right-6 z-50">
+        <GameRules />
+      </div>
+    </div>
+  );
+}
