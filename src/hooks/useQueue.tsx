@@ -53,7 +53,7 @@ export const useQueue = (baseUrl: string) => {
     return queue[0];
   };
 
-  const peek = () => {
+  const peek = (): [Title, Title] | null => {
     if (queue.length < 2) {
       return null;
     }
