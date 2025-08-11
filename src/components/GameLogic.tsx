@@ -5,10 +5,12 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { QuestionCard } from "./QuestionCard"
 import { GameRules } from "./GameRules"
+import { FavoritePopup } from "./FavoritePopup"
 import { useQueueContext } from "@/contexts/QueueContext"
 import { Title } from "@/types"
-import { updateEloRatings } from "@/lib/api"
+import { updateEloRatings, lowerEloRatings } from "@/lib/api"
 import Image from "next/image"
+import Link from "next/link"
 
 export function GameLogic() {
   const { queue, dequeue, peek, isLoading, error } = useQueueContext();
@@ -21,6 +23,8 @@ export function GameLogic() {
     showResults: false
   })
   const [gameStarted, setGameStarted] = useState(false)
+  const [showFavoritePopup, setShowFavoritePopup] = useState(false)
+
 
   // Get next pair of titles
   const getNextPair = (): [Title, Title] | null => {
@@ -85,6 +89,42 @@ export function GameLogic() {
         }
       } catch (error) {
         console.error('Error updating Elo ratings:', error);
+      }
+    }
+
+    // Hide results after 3 seconds and reset state
+    setTimeout(() => {
+      setGameState({
+        selectedOption: null,
+        showResults: false
+      });
+      
+      // Load next pair
+      loadNextPair();
+    }, 2000);
+  };
+
+  // Handle "I like none of these" selection
+  const handleNoneSelected = async () => {
+    if (gameState.selectedOption !== null) return // Prevent multiple selections
+
+    // Update both selectedOption and showResults atomically
+    setGameState({
+      selectedOption: null,
+      showResults: true
+    });
+
+    // Lower ELO ratings for both titles when user likes neither
+    if (currentTitles) {
+      const [title1, title2] = currentTitles;
+      
+      try {
+        const success = await lowerEloRatings(title1.id, title2.id);
+        if (!success) {
+          console.error('Failed to lower ELO ratings');
+        }
+      } catch (error) {
+        console.error('Error lowering ELO ratings:', error);
       }
     }
 
@@ -174,10 +214,15 @@ export function GameLogic() {
           </h1>
         </div>
         
+        <Link href="/favorites">
+          <Button className="bg-zinc-700 hover:bg-zinc-600 text-yellow-400 border border-yellow-400/50 hover:border-yellow-400 px-4 transition-colors duration-200">
+            ♥ Favorites
+          </Button>
+        </Link>
       </div>
 
-      {/* Question Card - Full Screen */}
-      <div className="flex-1">
+      {/* Question Card - 80% of screen height */}
+      <div className="h-[80%]">
         <QuestionCard
           title1={title1}
           title2={title2}
@@ -186,6 +231,45 @@ export function GameLogic() {
           showResults={gameState.showResults}
         />
       </div>
+
+      {/* "I like none of these" Button - 20% of screen height */}
+      <div className="h-[20%] flex items-center justify-center p-4 pt-2 gap-4">
+        <Button 
+          onClick={handleNoneSelected}
+          disabled={gameState.selectedOption !== null || gameState.showResults}
+          className={`flex-1 h-full text-2xl font-bold transition-all duration-300 ${
+            gameState.selectedOption !== null || gameState.showResults
+              ? 'bg-zinc-600 text-zinc-400 cursor-not-allowed'
+              : 'bg-red-600 hover:bg-red-700 text-white'
+          }`}
+        >
+          I like none of these
+        </Button>
+
+        <Button 
+          onClick={() => setShowFavoritePopup(true)}
+          disabled={gameState.selectedOption !== null || gameState.showResults}
+          className={`flex-1 h-full text-2xl font-bold transition-all duration-300 ${
+            gameState.selectedOption !== null || gameState.showResults
+              ? 'bg-zinc-600 text-zinc-400 cursor-not-allowed'
+              : 'bg-blue-600 hover:bg-blue-700 text-white'
+          }`}
+        >
+          ♥ Add to Favorites
+        </Button>
+      </div>
+
+      {/* Favorite Popup */}
+      {currentTitles && (
+        <FavoritePopup
+          title1={currentTitles[0]}
+          title2={currentTitles[1]}
+          isOpen={showFavoritePopup}
+          onClose={() => setShowFavoritePopup(false)}
+        />
+      )}
+
+
 
       {/* Floating Help Button - Bottom Right Corner */}
       <div className="fixed bottom-6 right-6 z-50">

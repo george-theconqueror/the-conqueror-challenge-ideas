@@ -42,6 +42,82 @@ export async function updateEloRatings(title1Id: number, title2Id: number, winne
   }
 }
 
+// Lower ELO ratings for both titles when user likes neither
+export async function lowerEloRatings(title1Id: number, title2Id: number): Promise<boolean> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/lower-elo`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        title1_id: title1Id,
+        title2_id: title2Id
+      }),
+    })
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+
+    const result = await response.json()
+    console.log('✅ Lower ELO successful:', result)
+    return true
+  } catch (error) {
+    console.error('❌ Error lowering ELO ratings:', error)
+    return false
+  }
+}
+
+// Increment favorite count for a title
+export async function incrementFavorite(titleId: number): Promise<boolean> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/increment-favorite`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        title_id: titleId
+      }),
+    })
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+
+    const result = await response.json()
+    console.log('✅ Increment favorite successful:', result)
+    return true
+  } catch (error) {
+    console.error('❌ Error incrementing favorite:', error)
+    return false
+  }
+}
+
+// Fetch favorite titles
+export async function fetchFavoriteTitles(): Promise<string[]> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/favorite-titles`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+
+    const result = await response.json()
+    console.log('✅ Fetch favorites successful:', result)
+    return result.titles.map((title: any) => title.title)
+  } catch (error) {
+    console.error('❌ Error fetching favorites:', error)
+    return []
+  }
+}
+
 // Fetch function to get questions
 export async function fetchQuestions(count: number = 10): Promise<Question[]> {
   try {

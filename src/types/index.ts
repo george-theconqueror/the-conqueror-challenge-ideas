@@ -3,6 +3,7 @@ export interface Title {
   title: string;
   elo: number;
   appearances: number;
+  added_favorite: number;
 }
 
 export interface RandomTitlesResponse {

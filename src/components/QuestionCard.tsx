@@ -1,7 +1,7 @@
 "use client"
 
-import { Card, CardHeader, CardTitle } from "@/components/ui/card"
 import { useState, useEffect } from "react"
+import { Card, CardHeader, CardTitle } from "@/components/ui/card"
 import { Title } from "@/types"
 
 interface QuestionCardProps {
@@ -26,35 +26,34 @@ export function QuestionCard({ title1, title2, onSelect, selectedOption, showRes
     return () => window.removeEventListener('resize', checkOrientation)
   }, [])
 
-  // Simple 70/30 ratio based on selected option
-  const idea1Percentage = selectedOption === 0 ? 70 : 30;
-  const idea2Percentage = selectedOption === 1 ? 70 : 30;
-
 
 
   return (
     <div className="w-full h-full flex flex-col overflow-hidden">
       {/* Two Large Cards - Full Screen */}
-      <div className={`flex-1 flex gap-4 p-4 ${
+      <div className={`flex-1 flex gap-4 p-4 pb-2 ${
         isPortrait ? 'flex-col' : 'flex-row'
       }`}>
         {/* Option 0 Card - Yellow text on zinc background before selection */}
         <Card 
-          className={`cursor-pointer transition-all duration-1000 ease-in-out ${
+          className={`cursor-pointer ${
+            selectedOption === null 
+              ? '' // No transitions when "I like none of these" is selected
+              : 'transition-all duration-1000 ease-in-out'
+          } ${
             selectedOption === 0 
               ? 'bg-yellow-500 text-zinc-900 border-4 border-yellow-500' 
-              : showResults 
+              : selectedOption === 1
                 ? 'bg-zinc-800 text-yellow-500 border-4 border-yellow-500'
                 : 'bg-zinc-800 text-yellow-500 border-4 border-zinc-700 hover:bg-zinc-700 hover:border-yellow-500/50'
           } ${
-            showResults 
-              ? (selectedOption === 0 
-                  ? (isPortrait ? 'h-[70%] w-full' : 'w-[70%] h-full')
-                  : (isPortrait ? 'h-[30%] w-full' : 'w-[30%] h-full')
-                )
-              : (isPortrait ? 'h-1/2 w-full' : 'w-1/2 h-full')
-          } ${showResults ? 'pointer-events-none' : ''}`}
-          onClick={() => !showResults && onSelect(0)}
+            selectedOption === 0 
+              ? (isPortrait ? 'h-[70%] w-full' : 'w-[70%] h-full')
+              : selectedOption === 1
+                ? (isPortrait ? 'h-[30%] w-full' : 'w-[30%] h-full')
+                : (isPortrait ? 'h-1/2 w-full' : 'w-1/2 h-full')
+          } ${selectedOption !== null ? 'pointer-events-none' : ''}`}
+          onClick={() => selectedOption === null && onSelect(0)}
         >
           <CardHeader className={`h-full flex flex-col justify-center ${
             isPortrait ? 'text-center' : ''
@@ -69,22 +68,25 @@ export function QuestionCard({ title1, title2, onSelect, selectedOption, showRes
 
         {/* Option 1 Card - zinc text on yellow background before selection */}
         <Card 
-          className={`cursor-pointer transition-all duration-1000 ease-in-out ${
+          className={`cursor-pointer ${
+            selectedOption === null 
+              ? '' // No transitions when "I like none of these" is selected
+              : 'transition-all duration-1000 ease-in-out'
+          } ${
             selectedOption === 1 
               ? 'bg-yellow-500 text-zinc-900 border-4 border-yellow-500' 
-              : showResults 
+              : selectedOption === 0
                 ? 'bg-zinc-800 text-yellow-500 border-4 border-yellow-500'
                 : 'bg-yellow-500 text-zinc-800 border-4 border-yellow-500 hover:bg-yellow-400 hover:border-yellow-600'
           } ${
-            showResults 
-              ? (selectedOption === 1 
-                  ? (isPortrait ? 'h-[70%] w-full' : 'w-[70%] h-full')
-                  : (isPortrait ? 'h-[30%] w-full' : 'w-[30%] h-full')
-                )
-              : (isPortrait ? 'h-1/2 w-full' : 'w-1/2 h-full')
-          } ${showResults ? 'pointer-events-none' : ''}`}
+            selectedOption === 1 
+              ? (isPortrait ? 'h-[70%] w-full' : 'w-[70%] h-full')
+              : selectedOption === 0
+                ? (isPortrait ? 'h-[30%] w-full' : 'w-[30%] h-full')
+                : (isPortrait ? 'h-1/2 w-full' : 'w-1/2 h-full')
+          } ${selectedOption !== null ? 'pointer-events-none' : ''}`}
 
-          onClick={() => !showResults && onSelect(1)}
+          onClick={() => selectedOption === null && onSelect(1)}
         >
           <CardHeader className={`h-full flex flex-col justify-center ${
             isPortrait ? 'text-center' : ''
