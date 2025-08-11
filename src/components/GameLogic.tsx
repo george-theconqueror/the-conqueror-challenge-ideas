@@ -101,7 +101,7 @@ export function GameLogic() {
       
       // Load next pair
       loadNextPair();
-    }, 2000);
+    }, 1000);
   };
 
   // Handle "I like none of these" selection
@@ -128,7 +128,6 @@ export function GameLogic() {
       }
     }
 
-    // Hide results after 3 seconds and reset state
     setTimeout(() => {
       setGameState({
         selectedOption: null,
@@ -137,7 +136,7 @@ export function GameLogic() {
       
       // Load next pair
       loadNextPair();
-    }, 2000);
+    }, 600);
   };
 
   // Start game automatically on component mount
@@ -201,7 +200,6 @@ export function GameLogic() {
     <div className="h-screen flex flex-col bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900">
       {/* Header */}
       <div className="flex justify-between items-center p-4 bg-zinc-900/80 backdrop-blur-sm border-b border-yellow-400/30">
-        <div className="flex items-center gap-3">
           <Image
             src="/Conqueror Logo.png"
             alt="Conqueror Logo"
@@ -210,9 +208,8 @@ export function GameLogic() {
             className="rounded-sm"
           />
           <h1 className="text-xl font-bold text-yellow-400">
-            The Conqueror Virtual Challenges Ideas
+            Would You Rather
           </h1>
-        </div>
         
         <Link href="/favorites">
           <Button className="bg-zinc-700 hover:bg-zinc-600 text-yellow-400 border border-yellow-400/50 hover:border-yellow-400 px-4 transition-colors duration-200">
@@ -243,7 +240,7 @@ export function GameLogic() {
               : 'bg-red-600 hover:bg-red-700 text-white'
           }`}
         >
-          I like none of these
+          None of these
         </Button>
 
         <Button 
