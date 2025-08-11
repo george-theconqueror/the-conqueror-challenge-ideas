@@ -13,9 +13,14 @@ import Image from "next/image"
 export function GameLogic() {
   const { queue, dequeue, peek, isLoading, error } = useQueueContext();
   const [currentTitles, setCurrentTitles] = useState<[Title, Title] | null>(null)
-  const [selectedOption, setSelectedOption] = useState<0 | 1 | null>(null)
+  const [gameState, setGameState] = useState<{
+    selectedOption: 0 | 1 | null
+    showResults: boolean
+  }>({
+    selectedOption: null,
+    showResults: false
+  })
   const [gameStarted, setGameStarted] = useState(false)
-  const [showResults, setShowResults] = useState(false)
 
   // Get next pair of titles
   const getNextPair = (): [Title, Title] | null => {
@@ -43,9 +48,11 @@ export function GameLogic() {
     const pair = getNextPair();
     if (pair) {
       setCurrentTitles(pair);
-      setSelectedOption(null);
+      setGameState({
+        selectedOption: null,
+        showResults: false
+      });
       setGameStarted(true);
-      setShowResults(false);
     }
   };
 
@@ -59,9 +66,13 @@ export function GameLogic() {
 
   // Handle option selection
   const handleOptionSelect = async (option: 0 | 1) => {
-    if (selectedOption !== null) return // Prevent multiple selections
+    if (gameState.selectedOption !== null) return // Prevent multiple selections
 
-    setSelectedOption(option);
+    // Update both selectedOption and showResults atomically
+    setGameState({
+      selectedOption: option,
+      showResults: true
+    });
 
     // Update Elo ratings if we have current titles
     if (currentTitles) {
@@ -77,15 +88,16 @@ export function GameLogic() {
       }
     }
 
-    // Show results for 3 seconds
-    setShowResults(true);
+    // Hide results after 3 seconds and reset state
     setTimeout(() => {
-      setShowResults(false);
-      setSelectedOption(null);
+      setGameState({
+        selectedOption: null,
+        showResults: false
+      });
       
       // Load next pair
       loadNextPair();
-    }, 3000);
+    }, 2000);
   };
 
   // Start game automatically on component mount
@@ -170,8 +182,8 @@ export function GameLogic() {
           title1={title1}
           title2={title2}
           onSelect={handleOptionSelect}
-          selectedOption={selectedOption}
-          showResults={showResults}
+          selectedOption={gameState.selectedOption}
+          showResults={gameState.showResults}
         />
       </div>
 
