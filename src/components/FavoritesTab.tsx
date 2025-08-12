@@ -10,8 +10,14 @@ interface FavoritesTabProps {
   onClose: () => void
 }
 
+interface FavoriteTitle {
+  id: number
+  title: string
+  added_favorite: number
+}
+
 export function FavoritesTab({ isOpen, onClose }: FavoritesTabProps) {
-  const [favorites, setFavorites] = useState<string[]>([])
+  const [favorites, setFavorites] = useState<FavoriteTitle[]>([])
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
@@ -59,12 +65,18 @@ export function FavoritesTab({ isOpen, onClose }: FavoritesTabProps) {
             </div>
           ) : (
             <div className="max-h-[60vh] overflow-y-auto">
-              {favorites.map((title, index) => (
+              {favorites.map((favorite) => (
                 <div
-                  key={index}
+                  key={favorite.id}
                   className="p-4 border-b border-zinc-700 last:border-b-0 hover:bg-zinc-700/50 transition-colors duration-200"
                 >
-                  <p className="text-yellow-400 text-lg">{title}</p>
+                  <div className="flex items-center justify-between">
+                    <p className="text-yellow-400 text-lg">{favorite.title}</p>
+                    <div className="flex items-center gap-2">
+                      <span className="text-yellow-400/70 text-sm">♥</span>
+                      <span className="text-yellow-400 font-semibold">{favorite.added_favorite}</span>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>

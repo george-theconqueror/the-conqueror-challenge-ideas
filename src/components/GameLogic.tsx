@@ -161,16 +161,17 @@ export function GameLogic() {
         {/* Centered content below the logo */}
         <div className="flex-1 flex flex-col items-center justify-center">
           {/* Main Title with ONRAMP Font */}
-          <h1 className="text-8xl text-yellow-400 mb-4 text-center" style={{ fontFamily: 'var(--font-onramp)' }}>
+          <h1 className="text-4xl text-yellow-400 mb-4 text-center" style={{ fontFamily: 'var(--font-onramp)' }}>
             Would You Rather
           </h1>
           
           {/* Subtitle */}
-          <p className="text-xl text-zinc-600 mb-8 text-center" style={{ fontFamily: 'var(--font-lakesight)' }}>
-            Choose your next challenges
+          <p className="text-2xl text-zinc-200 mb-8 text-center" style={{ fontFamily: 'var(--font-lakesight)' }}>
+            You choose your next challenges!
           </p>
         </div>
-                
+
+
       </div>
     );
   }
@@ -215,7 +216,7 @@ export function GameLogic() {
           className={`w-full h-full text-2xl font-bold transition-all duration-300 ${
             gameState.selectedOption !== null || gameState.showResults
               ? 'bg-zinc-600 text-zinc-400 cursor-not-allowed'
-              : 'bg-zinc-900 text-gray-300 border-4 border-zinc-800 hover:bg-zinc-800 hover:border-gray-500/50'
+              : 'bg-zinc-900 text-gray-300 border-4 rounded-xl border-zinc-800 hover:bg-zinc-800 hover:border-gray-500/50'
           }`}
         >
           None of these
