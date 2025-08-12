@@ -6,15 +6,17 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { QuestionCard } from "./QuestionCard"
 import { GameRules } from "./GameRules"
 import { FavoritePopup } from "./FavoritePopup"
+import { NameInput } from "./NameInput"
 import { useQueueContext } from "@/contexts/QueueContext"
+import { useNameContext } from "@/contexts/NameContext"
 import { Title } from "@/types"
 import { updateEloRatings, lowerEloRatings } from "@/lib/api"
-import {X} from 'lucide-react';
 import Image from "next/image"
 import Link from "next/link"
 
 export function GameLogic() {
   const { queue, dequeue, peek, isLoading, error } = useQueueContext();
+  const { playerName } = useNameContext();
   const [currentTitles, setCurrentTitles] = useState<[Title, Title] | null>(null)
   const [gameState, setGameState] = useState<{
     selectedOption: 0 | 1 | null
@@ -142,10 +144,15 @@ export function GameLogic() {
 
   // Start game automatically on component mount
   useEffect(() => {
-    if (!gameStarted && !isLoading && queue.length >= 2) {
+    if (!gameStarted && !isLoading && queue.length >= 2 && playerName) {
       startNewGame();
     }
-  }, [gameStarted, isLoading, queue.length]);
+  }, [gameStarted, isLoading, queue.length, playerName]);
+
+  // Show name input if player hasn't entered their name
+  if (!playerName) {
+    return <NameInput onStartGame={() => {}} />;
+  }
 
   if (!gameStarted) {
     return (

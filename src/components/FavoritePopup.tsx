@@ -4,7 +4,8 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Title } from "@/types"
-import { incrementFavorite } from "@/lib/api"
+import { addFavorite } from "@/lib/api"
+import { useNameContext } from "@/contexts/NameContext"
 
 interface FavoritePopupProps {
   title1: Title
@@ -14,6 +15,7 @@ interface FavoritePopupProps {
 }
 
 export function FavoritePopup({ title1, title2, isOpen, onClose }: FavoritePopupProps) {
+  const { playerName } = useNameContext()
   const [selectedTitles, setSelectedTitles] = useState<number[]>([])
   const [isLoading, setIsLoading] = useState(false)
 
@@ -28,11 +30,11 @@ export function FavoritePopup({ title1, title2, isOpen, onClose }: FavoritePopup
   }
 
   const handleSave = async () => {
-    if (selectedTitles.length === 0) return
+    if (selectedTitles.length === 0 || !playerName) return
     
     setIsLoading(true)
     try {
-      const promises = selectedTitles.map(id => incrementFavorite(id))
+      const promises = selectedTitles.map(id => addFavorite(id, playerName))
       await Promise.all(promises)
       onClose()
     } catch (error) {

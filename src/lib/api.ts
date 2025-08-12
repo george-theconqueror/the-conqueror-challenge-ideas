@@ -95,6 +95,33 @@ export async function incrementFavorite(titleId: number): Promise<boolean> {
   }
 }
 
+// Add a favorite with player name
+export async function addFavorite(titleId: number, playerName: string): Promise<boolean> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/add-favorite`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        title_id: titleId,
+        name: playerName
+      }),
+    })
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+
+    const result = await response.json()
+    console.log('✅ Add favorite successful:', result)
+    return true
+  } catch (error) {
+    console.error('❌ Error adding favorite:', error)
+    return false
+  }
+}
+
 // Fetch favorite titles
 export async function fetchFavoriteTitles(): Promise<string[]> {
   try {
@@ -114,6 +141,34 @@ export async function fetchFavoriteTitles(): Promise<string[]> {
     return result.titles.map((title: any) => title.title)
   } catch (error) {
     console.error('❌ Error fetching favorites:', error)
+    return []
+  }
+}
+
+// Fetch favorites for a specific player by name
+export async function fetchPlayerFavorites(playerName: string): Promise<{id: number, title: string}[]> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/get-favorites/${encodeURIComponent(playerName)}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+
+    const result = await response.json()
+    
+    if (!result.success) {
+      throw new Error(result.message || 'Failed to fetch player favorites')
+    }
+
+    console.log('✅ Fetch player favorites successful:', result)
+    return result.favorites || []
+  } catch (error) {
+    console.error('❌ Error fetching player favorites:', error)
     return []
   }
 }
@@ -223,4 +278,13 @@ export const API_ENDPOINTS = {
   // Body: { title1_id: number, title2_id: number, winner: 0 | 1 }
   // Returns: Elo update result
   UPDATE_ELO: `${API_BASE_URL}/update-elo`,
+  
+  // POST /add-favorite
+  // Body: { title_id: number, name: string }
+  // Returns: { success: boolean, message: string }
+  ADD_FAVORITE: `${API_BASE_URL}/add-favorite`,
+  
+  // GET /get-favorites/{name}
+  // Returns: { success: boolean, name: string, favorites: Array<{id: number, title: string}>, count: number }
+  GET_PLAYER_FAVORITES: `${API_BASE_URL}/get-favorites`,
 }

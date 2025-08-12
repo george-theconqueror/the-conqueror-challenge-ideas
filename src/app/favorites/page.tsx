@@ -3,22 +3,28 @@
 import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { fetchFavoriteTitles } from "@/lib/api"
+import { fetchPlayerFavorites } from "@/lib/api"
+import { useNameContext } from "@/contexts/NameContext"
 import Image from "next/image"
 import Link from "next/link"
 
 export default function FavoritesPage() {
-  const [favorites, setFavorites] = useState<string[]>([])
+  const { playerName } = useNameContext()
+  const [favorites, setFavorites] = useState<{id: number, title: string}[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    loadFavorites()
-  }, [])
+    if (playerName) {
+      loadFavorites()
+    }
+  }, [playerName])
 
   const loadFavorites = async () => {
+    if (!playerName) return
+    
     try {
-      const titles = await fetchFavoriteTitles()
-      setFavorites(titles)
+      const playerFavorites = await fetchPlayerFavorites(playerName)
+      setFavorites(playerFavorites)
     } catch (error) {
       console.error('Error loading favorites:', error)
     } finally {
@@ -57,7 +63,17 @@ export default function FavoritesPage() {
             <CardTitle className="text-center text-3xl text-yellow-400">Your Favorite Ideas</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            {isLoading ? (
+            {!playerName ? (
+              <div className="text-center py-12">
+                <p className="text-zinc-400 text-xl mb-4">No player name set!</p>
+                <p className="text-zinc-500 mb-6">Please go back to the game and enter your name first.</p>
+                <Link href="/">
+                  <Button className="bg-yellow-600 hover:bg-yellow-500 text-zinc-900 px-6 py-3 text-lg">
+                    Back to Game
+                  </Button>
+                </Link>
+              </div>
+            ) : isLoading ? (
               <div className="text-center py-12">
                 <p className="text-yellow-400 text-xl">Loading your favorites...</p>
               </div>
@@ -73,12 +89,12 @@ export default function FavoritesPage() {
               </div>
             ) : (
               <div className="space-y-3">
-                {favorites.map((title, index) => (
+                {favorites.map((favorite, index) => (
                   <div
-                    key={index}
+                    key={favorite.id}
                     className="p-4 bg-zinc-700/50 rounded-lg border border-zinc-600 hover:bg-zinc-700/70 transition-colors duration-200"
                   >
-                    <p className="text-yellow-400 text-lg">{title}</p>
+                    <p className="text-yellow-400 text-lg">{favorite.title}</p>
                   </div>
                 ))}
               </div>
