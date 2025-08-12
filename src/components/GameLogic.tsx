@@ -9,6 +9,7 @@ import { FavoritePopup } from "./FavoritePopup"
 import { useQueueContext } from "@/contexts/QueueContext"
 import { Title } from "@/types"
 import { updateEloRatings, lowerEloRatings } from "@/lib/api"
+import {X} from 'lucide-react';
 import Image from "next/image"
 import Link from "next/link"
 
@@ -237,7 +238,7 @@ export function GameLogic() {
           className={`flex-1 h-full text-2xl font-bold transition-all duration-300 ${
             gameState.selectedOption !== null || gameState.showResults
               ? 'bg-zinc-600 text-zinc-400 cursor-not-allowed'
-              : 'bg-red-600 hover:bg-red-700 text-white'
+              : 'bg-zinc-800 text-yellow-400/85 border-4 border-zinc-700 hover:bg-zinc-700 hover:border-yellow-500/50'
           }`}
         >
           None of these
@@ -249,11 +250,11 @@ export function GameLogic() {
           className={`flex-1 h-full text-2xl font-bold transition-all duration-300 ${
             gameState.selectedOption !== null || gameState.showResults
               ? 'bg-zinc-600 text-zinc-400 cursor-not-allowed'
-              : 'bg-blue-600 hover:bg-blue-700 text-white'
+              : 'bg-yellow-500/95 text-zinc-800 border-4 border-yellow-600 hover:bg-yellow-400 hover:border-yellow-500 hover:text-zinc-700'
           }`}
         >
-          ♥ Add to Favorites
-        </Button>
+          Add to Favorites
+        </Button> {/**                 : 'bg-yellow-500 text-zinc-800 border-4 border-yellow-500 hover:bg-yellow-400 hover:border-yellow-600' */}
       </div>
 
       {/* Favorite Popup */}
