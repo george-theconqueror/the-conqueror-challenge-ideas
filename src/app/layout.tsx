@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { QueueProvider } from "@/contexts/QueueContext";
 import { NameProvider } from "@/contexts/NameContext";
+import { lakesight, onramp } from "@/lib/fonts";
+import { Header } from "@/components/Header";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,10 +30,11 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${lakesight.variable} ${onramp.variable} antialiased`}
       >
         <QueueProvider>
           <NameProvider>
+            <Header />
             {children}
           </NameProvider>
         </QueueProvider>

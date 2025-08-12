@@ -6,22 +6,15 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import QuestionMark from "./QuestionMark"
 
-export function GameRules() {
+interface GameRulesProps {
+  onClose: () => void
+}
+
+export function GameRules({ onClose }: GameRulesProps) {
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button 
-          size="icon" 
-          className="w-12 h-12 rounded-full border-3 bg-yellow-500 shadow-lg backdrop-blur-sm"
-        >
-          <QuestionMark className="h-8 w-8"/>
-        </Button>
-      </DialogTrigger>
+    <Dialog open={true} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px] border-2 border-yellow-400/30 bg-zinc-800">
         <DialogHeader>
           <DialogTitle className="text-yellow-400">The Conqueror Virtual Challenges</DialogTitle>
@@ -29,6 +22,7 @@ export function GameRules() {
             Help us discover amazing virtual challenge ideas for The Conqueror community!
           </DialogDescription>
         </DialogHeader>
+        
         <div className="space-y-4">
           <div className="space-y-2">
             <h4 className="font-semibold text-yellow-400">Our Mission</h4>

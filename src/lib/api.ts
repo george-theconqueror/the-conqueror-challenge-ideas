@@ -123,7 +123,7 @@ export async function addFavorite(titleId: number, playerName: string): Promise<
 }
 
 // Fetch favorite titles
-export async function fetchFavoriteTitles(): Promise<string[]> {
+export async function fetchFavoriteTitles(): Promise<{id: number, title: string, added_favorite: number}[]> {
   try {
     const response = await fetch(`${API_BASE_URL}/favorite-titles`, {
       method: 'GET',
@@ -138,7 +138,11 @@ export async function fetchFavoriteTitles(): Promise<string[]> {
 
     const result = await response.json()
     console.log('✅ Fetch favorites successful:', result)
-    return result.titles.map((title: any) => title.title)
+    return result.titles.map((title: any) => ({
+      id: title.id,
+      title: title.title,
+      added_favorite: title.added_favorite
+    }))
   } catch (error) {
     console.error('❌ Error fetching favorites:', error)
     return []

@@ -2,7 +2,10 @@
 
 import { useState, useEffect } from "react"
 import { Card, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 import { Title } from "@/types"
+import { incrementFavorite } from "@/lib/api"
+import { Star } from "lucide-react"
 
 interface QuestionCardProps {
   title1: Title
@@ -14,6 +17,7 @@ interface QuestionCardProps {
 
 export function QuestionCard({ title1, title2, onSelect, selectedOption, showResults = false }: QuestionCardProps) {
   const [isPortrait, setIsPortrait] = useState(false)
+  const [favoritedTitles, setFavoritedTitles] = useState<Set<number>>(new Set())
 
   // Check if screen is portrait (height > width)
   useEffect(() => {
@@ -29,14 +33,14 @@ export function QuestionCard({ title1, title2, onSelect, selectedOption, showRes
 
 
   return (
-    <div className="w-full h-full flex flex-col overflow-hidden">
+    <div className=" w-80% h-full flex flex-col overflow-hidden">
       {/* Two Large Cards - Full Screen */}
       <div className={`flex-1 flex gap-4 p-4 pb-2 ${
         isPortrait ? 'flex-col' : 'flex-row'
       }`}>
         {/* Option 0 Card - Yellow text on zinc background before selection */}
         <Card 
-          className={`cursor-pointer ${
+          className={` cursor-pointer relative ${
             selectedOption === null 
               ? '' // No transitions when "I like none of these" is selected
               : 'transition-all duration-1000 ease-in-out'
@@ -55,6 +59,23 @@ export function QuestionCard({ title1, title2, onSelect, selectedOption, showRes
           } ${selectedOption !== null ? 'pointer-events-none' : ''}`}
           onClick={() => selectedOption === null && onSelect(0)}
         >
+          {/* Favorite Button - Top Right */}
+          <Button
+            onClick={(e) => {
+              e.stopPropagation();
+              incrementFavorite(title1.id);
+              setFavoritedTitles(prev => new Set(prev).add(title1.id));
+            }}
+            className={`absolute top-2 right-2 z-10 p-2 h-8 w-8 ${
+              favoritedTitles.has(title1.id) 
+                ? 'bg-zinc-600/60 text-zinc-500 cursor-not-allowed' 
+                : 'bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700/90'
+            } border border-zinc-600/50`}
+            disabled={selectedOption !== null || favoritedTitles.has(title1.id)}
+          >
+            {favoritedTitles.has(title1.id) ? '✓' : <Star className="text-yellow-400"/>}
+          </Button>
+          
           <CardHeader className={`h-full flex flex-col justify-center ${
             isPortrait ? 'text-center' : ''
           }`}>
@@ -68,7 +89,7 @@ export function QuestionCard({ title1, title2, onSelect, selectedOption, showRes
 
         {/* Option 1 Card - zinc text on yellow background before selection */}
         <Card 
-          className={`cursor-pointer ${
+          className={`cursor-pointer relative ${
             selectedOption === null 
               ? '' // No transitions when "I like none of these" is selected
               : 'transition-all duration-1000 ease-in-out'
@@ -88,6 +109,23 @@ export function QuestionCard({ title1, title2, onSelect, selectedOption, showRes
 
           onClick={() => selectedOption === null && onSelect(1)}
         >
+          {/* Favorite Button - Top Right */}
+          <Button
+            onClick={(e) => {
+              e.stopPropagation();
+              incrementFavorite(title2.id);
+              setFavoritedTitles(prev => new Set(prev).add(title2.id));
+            }}
+            className={`absolute top-2 right-2 z-10 p-2 h-8 w-8 ${
+              favoritedTitles.has(title2.id) 
+                ? 'bg-zinc-600/60 text-zinc-500 cursor-not-allowed' 
+                : 'bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700/90'
+            } border border-zinc-600/50`}
+            disabled={selectedOption !== null || favoritedTitles.has(title2.id)}
+          >
+            {favoritedTitles.has(title2.id) ? '✓' : <Star className="text-yellow-400"/>}
+          </Button>
+          
           <CardHeader className={`h-full flex flex-col justify-center ${
             isPortrait ? 'text-center' : ''
           }`}>
