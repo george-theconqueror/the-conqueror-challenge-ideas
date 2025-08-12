@@ -45,7 +45,7 @@ export function FavoritesTab({ isOpen, onClose }: FavoritesTabProps) {
       <Card className="w-full max-w-2xl mx-4 border-yellow-400/30 bg-zinc-800/90 backdrop-blur-sm max-h-[80vh] overflow-hidden">
         <CardHeader className="border-b border-zinc-700">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-2xl text-yellow-400">Your Favorites</CardTitle>
+            <CardTitle className="text-2xl text-yellow-400">Favorites</CardTitle>
             <Button
               onClick={onClose}
               className="bg-zinc-600 hover:bg-zinc-500 text-white"
@@ -57,7 +57,7 @@ export function FavoritesTab({ isOpen, onClose }: FavoritesTabProps) {
         <CardContent className="p-0">
           {isLoading ? (
             <div className="p-8 text-center">
-              <p className="text-yellow-400">Loading favorites...</p>
+              <p className="text-yellow-400">Loading...</p>
             </div>
           ) : favorites.length === 0 ? (
             <div className="p-8 text-center">
