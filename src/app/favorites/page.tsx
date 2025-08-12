@@ -31,17 +31,17 @@ export default function FavoritesPage() {
         <div className="container mx-auto px-4 py-8">
           <Card className="max-w-4xl mx-auto border-yellow-400/30 bg-zinc-800/50 backdrop-blur-sm">
           <CardHeader>
-            <CardTitle className="text-center text-3xl text-yellow-400">Your Favorite Ideas</CardTitle>
+            <CardTitle className="text-center text-3xl text-yellow-400">Favorite Ideas</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             {isLoading ? (
               <div className="text-center py-12">
-                <p className="text-yellow-400 text-xl">Loading your favorites...</p>
+                <p className="text-yellow-400 text-xl">Loading...</p>
               </div>
             ) : favorites.length === 0 ? (
               <div className="text-center py-12">
                 <p className="text-zinc-400 text-xl mb-4">No favorites yet!</p>
-                <p className="text-zinc-500 mb-6">Start playing the game and add some ideas to your favorites.</p>
+                <p className="text-zinc-500 mb-6">Start playing the game and add some ideas.</p>
                 <Link href="/">
                   <Button className="bg-yellow-600 hover:bg-yellow-500 text-zinc-900 px-6 py-3 text-lg">
                     Start Playing
