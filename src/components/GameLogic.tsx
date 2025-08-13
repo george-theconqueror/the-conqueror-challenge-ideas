@@ -217,8 +217,8 @@ export function GameLogic() {
           disabled={gameState.selectedOption !== null || gameState.showResults}
           className={`w-full h-full text-2xl md:text-3xl font-bold transition-all duration-300 ${
             gameState.selectedOption !== null || gameState.showResults
-              ? 'bg-zinc-800 text-zinc-400 cursor-not-allowed'
-              : 'bg-zinc-900 text-zinc-400 border-3 rounded-lg border-zinc-800/70 hover:bg-zinc-700/70'
+              ? 'bg-zinc-800 border-4 border-zinc-900 text-zinc-500 cursor-not-allowed'
+              : 'bg-zinc-900 text-zinc-500 border-3 rounded-lg border-zinc-800/70 hover:bg-zinc-700/70'
           }`}
         >
           None of these

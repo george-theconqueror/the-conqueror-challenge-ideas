@@ -48,7 +48,7 @@ export function QuestionCard({ title1, title2, onSelect, selectedOption, showRes
             selectedOption === 0 
               ? 'bg-cyan-800 text-zinc-900 border-4 border-cyan-700' 
               : selectedOption === 1
-                ? 'bg-zinc-800 text-zinc-400'
+                ? 'bg-zinc-800 border-4 border-zinc-900 text-zinc-400'
                 : 'bg-cyan-800 text-yellow-500 border-4 border-cyan-700 hover:bg-cyan-700 hover:border-cyan-500/50'
           } ${
             selectedOption === 0 
