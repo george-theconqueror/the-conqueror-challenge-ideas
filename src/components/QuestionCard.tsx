@@ -35,7 +35,7 @@ export function QuestionCard({ title1, title2, onSelect, selectedOption, showRes
   return (
     <div className=" w-80% h-full flex flex-col overflow-hidden">
       {/* Two Large Cards - Full Screen */}
-      <div className={`flex-1 flex gap-4 p-4 pb-2 ${
+      <div className={`flex-1 flex gap-2 p-1 pb-1 ${
         isPortrait ? 'flex-col' : 'flex-row'
       }`}>
         {/* Option 0 Card - Yellow text on zinc background before selection */}
@@ -46,10 +46,10 @@ export function QuestionCard({ title1, title2, onSelect, selectedOption, showRes
               : 'transition-all duration-1000 ease-in-out'
           } ${
             selectedOption === 0 
-              ? 'bg-yellow-500 text-zinc-900 border-4 border-yellow-500' 
+              ? 'bg-cyan-800 text-zinc-900 border-4 border-cyan-700' 
               : selectedOption === 1
-                ? 'bg-zinc-800 text-yellow-500 border-4 border-yellow-500'
-                : 'bg-zinc-800 text-yellow-500 border-4 border-zinc-700 hover:bg-zinc-700 hover:border-yellow-500/50'
+                ? 'bg-zinc-800 text-zinc-400'
+                : 'bg-cyan-800 text-yellow-500 border-4 border-cyan-700 hover:bg-cyan-700 hover:border-cyan-500/50'
           } ${
             selectedOption === 0 
               ? (isPortrait ? 'h-[70%] w-full' : 'w-[70%] h-full')
@@ -68,8 +68,8 @@ export function QuestionCard({ title1, title2, onSelect, selectedOption, showRes
             }}
             className={`absolute top-2 right-2 z-10 p-2 h-8 w-8 ${
               favoritedTitles.has(title1.id) 
-                ? 'bg-zinc-600/60 text-zinc-500 cursor-not-allowed' 
-                : 'bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700/90'
+                ? 'bg-zinc-600/60 text-cyan-500 cursor-not-allowed' 
+                : 'bg-zinc-800/80 text-yellow-400 hover:bg-zinc-700/90'
             } border border-zinc-600/50`}
             disabled={selectedOption !== null || favoritedTitles.has(title1.id)}
           >
@@ -79,15 +79,15 @@ export function QuestionCard({ title1, title2, onSelect, selectedOption, showRes
           <CardHeader className={`h-full flex flex-col justify-center ${
             isPortrait ? 'text-center' : ''
           }`}>
-            <CardTitle className={`text-2xl md:text-3xl font-bold mb-4 ${
-  selectedOption === 0 ? 'text-zinc-900' : 'text-yellow-500'
+            <CardTitle className={`font-bold text-2xl md:text-3xl  mb-4 ${
+            selectedOption === 1 ? 'text-zinc-700/50' : 'text-zinc-300'
 } ${isPortrait ? 'text-center' : 'self-center'}`}>
               {title1.title}
             </CardTitle>
           </CardHeader>
         </Card>
 
-        {/* Option 1 Card - zinc text on yellow background before selection */}
+        {/* Option 1 Card - cyan text on yellow background before selection */}
         <Card 
           className={`cursor-pointer relative ${
             selectedOption === null 
@@ -95,10 +95,10 @@ export function QuestionCard({ title1, title2, onSelect, selectedOption, showRes
               : 'transition-all duration-1000 ease-in-out'
           } ${
             selectedOption === 1 
-              ? 'bg-yellow-500 text-zinc-900 border-4 border-yellow-500' 
+              ? 'bg-yellow-500/70 text-yellow-900 border-4 border-yellow-400' 
               : selectedOption === 0
-                ? 'bg-zinc-800 text-yellow-500 border-4 border-yellow-500'
-                : 'bg-yellow-500 text-zinc-800 border-4 border-yellow-500 hover:bg-yellow-400 hover:border-yellow-600'
+                ? 'bg-zinc-800 text-zinc-700/50 border-4 border-zinc-900'
+                : 'bg-yellow-500/75 text-cyan-800 border-4 border-yellow-500/90 hover:bg-yellow-500/80 hover:border-yellow-500'
           } ${
             selectedOption === 1 
               ? (isPortrait ? 'h-[70%] w-full' : 'w-[70%] h-full')
@@ -118,8 +118,8 @@ export function QuestionCard({ title1, title2, onSelect, selectedOption, showRes
             }}
             className={`absolute top-2 right-2 z-10 p-2 h-8 w-8 ${
               favoritedTitles.has(title2.id) 
-                ? 'bg-zinc-600/60 text-zinc-500 cursor-not-allowed' 
-                : 'bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700/90'
+                ? 'bg-zinc-600/60 text-cyan-500 cursor-not-allowed' 
+                : 'bg-zinc-800/80 text-yellow-400 hover:bg-zinc-700/90'
             } border border-zinc-600/50`}
             disabled={selectedOption !== null || favoritedTitles.has(title2.id)}
           >
@@ -130,7 +130,7 @@ export function QuestionCard({ title1, title2, onSelect, selectedOption, showRes
             isPortrait ? 'text-center' : ''
           }`}>
             <CardTitle className={`text-2xl md:text-3xl font-bold mb-4 ${
-  selectedOption === 0 ? 'text-yellow-400' : 'text-zinc-800'
+  selectedOption === 0 ? 'text-zinc-700' : 'text-zinc-300'
 } ${isPortrait ? 'text-center' : 'self-center'}`}>
               {title2.title}
             </CardTitle>

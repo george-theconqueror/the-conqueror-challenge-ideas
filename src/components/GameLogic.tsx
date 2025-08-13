@@ -8,7 +8,6 @@ import { useQueueContext } from "@/contexts/QueueContext"
 import { Title } from "@/types"
 import { updateEloRatings, lowerEloRatings } from "@/lib/api"
 import Image from "next/image"
-import Link from "next/link"
 
 export function GameLogic() {
   const { queue, dequeue, peek, isLoading, error } = useQueueContext();
@@ -161,13 +160,16 @@ export function GameLogic() {
         {/* Centered content below the logo */}
         <div className="flex-1 flex flex-col items-center justify-center">
           {/* Main Title with ONRAMP Font */}
-          <h1 className="text-4xl text-yellow-400 mb-4 text-center" style={{ fontFamily: 'var(--font-onramp)' }}>
+          <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-yellow-400 mb-4 text-center" style={{ fontFamily: 'var(--font-onramp)' }}>
             Would You Rather
           </h1>
           
           {/* Subtitle */}
-          <p className="text-2xl text-zinc-200 mb-8 text-center" style={{ fontFamily: 'var(--font-lakesight)' }}>
-            You choose your next challenges!
+          <p className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-zinc-200 text-center" style={{ fontFamily: 'var(--font-lakesight)' }}>
+            You choose the next
+          </p>
+          <p className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-zinc-200 mb-8 text-center" style={{ fontFamily: 'var(--font-lakesight)' }}>
+            challenges!
           </p>
         </div>
 
@@ -209,14 +211,14 @@ export function GameLogic() {
       </div>
 
       {/* "I like none of these" Button - 20% of available height */}
-      <div className="h-[20%] flex items-center justify-center p-4 pt-2">
+      <div className="h-[20%] flex items-center justify-center p-1">
         <Button 
           onClick={handleNoneSelected}
           disabled={gameState.selectedOption !== null || gameState.showResults}
-          className={`w-full h-full text-2xl font-bold transition-all duration-300 ${
+          className={`w-full h-full text-2xl md:text-3xl font-bold transition-all duration-300 ${
             gameState.selectedOption !== null || gameState.showResults
-              ? 'bg-zinc-600 text-zinc-400 cursor-not-allowed'
-              : 'bg-zinc-900 text-gray-300 border-4 rounded-xl border-zinc-800 hover:bg-zinc-800 hover:border-gray-500/50'
+              ? 'bg-zinc-800 text-zinc-400 cursor-not-allowed'
+              : 'bg-zinc-900 text-zinc-400 border-3 rounded-lg border-zinc-800/70 hover:bg-zinc-700/70'
           }`}
         >
           None of these
