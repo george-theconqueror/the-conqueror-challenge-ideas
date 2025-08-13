@@ -1,4 +1,3 @@
-import { Question } from "@/data/questions"
 
 // API Configuration
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
@@ -8,6 +7,24 @@ interface ApiResponse<T> {
   success: boolean
   data: T
   message?: string
+}
+
+// Question interface for legacy question functionality
+interface Question {
+  pair_id: string
+  idea1: string
+  idea2: string
+  votes_idea1: number
+  votes_idea2: number
+}
+
+// Title interface for the main game functionality
+interface Title {
+  id: number
+  title: string
+  elo: number
+  appearances: number
+  added_favorite: number
 }
 
 interface QuestionsResponse extends ApiResponse<Question[]> {}
@@ -257,10 +274,9 @@ export async function updateQuestionSelection(pairId: string, option: 'A' | 'B')
 
 // Fallback function to get local questions
 function getLocalQuestions(count: number): Question[] {
-  // Import the local questions as fallback
-  const { questions } = require('@/data/questions')
-  const shuffled = [...questions].sort(() => 0.5 - Math.random())
-  return shuffled.slice(0, count)
+  // Return empty array as fallback since we're not using local questions
+  // This function is kept for compatibility but returns empty data
+  return []
 }
 
 // Example API endpoint structure (for reference)
