@@ -1,23 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { decodeUrlParams } from '@/lib/urlObfuscation'
 
 export function middleware(request: NextRequest) {
   const { searchParams } = new URL(request.url)
   
-  // Check if we have URL parameters to store
-  const hasParams = searchParams.has('gender') || searchParams.has('age') || searchParams.has('location')
+  // Check if we have obfuscated URL parameters to store
+  const hasParams = searchParams.has('x') || searchParams.has('y') || searchParams.has('z')
   
   if (hasParams) {
-    // Create a response to set cookies
     const response = NextResponse.next()
     
-    // Extract parameters
-    const gender = searchParams.get('gender')
-    const age = searchParams.get('age')
-    const location = searchParams.get('location')
+    // Extract obfuscated parameters
+    const obfuscatedParams: Record<string, string> = {}
+    searchParams.forEach((value, key) => {
+      if (['x', 'y', 'z'].includes(key)) {
+        obfuscatedParams[key] = value
+      }
+    })
     
-    // Set cookies directly (these will be HTTP-only and secure)
-    if (gender) {
-      response.cookies.set('ideas-gender', gender, {
+    // Decode the parameters back to original names
+    const decodedParams = decodeUrlParams(obfuscatedParams)
+    
+    // Set cookies with original names (for your existing code)
+    if (decodedParams.gender) {
+      response.cookies.set('ideas-gender', decodedParams.gender, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
@@ -25,8 +31,8 @@ export function middleware(request: NextRequest) {
       })
     }
     
-    if (age) {
-      response.cookies.set('ideas-age', age, {
+    if (decodedParams.age) {
+      response.cookies.set('ideas-age', decodedParams.age, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
@@ -34,8 +40,8 @@ export function middleware(request: NextRequest) {
       })
     }
     
-    if (location) {
-      response.cookies.set('ideas-location', location, {
+    if (decodedParams.location) {
+      response.cookies.set('ideas-location', decodedParams.location, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
