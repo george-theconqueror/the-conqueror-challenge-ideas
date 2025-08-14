@@ -79,7 +79,7 @@ export function QuestionCard({ title1, title2, onSelect, selectedOption, showRes
           <CardHeader className={`h-full flex flex-col justify-center ${
             isPortrait ? 'text-center' : ''
           }`}>
-            <CardTitle className={`font-bold text-2xl md:text-3xl  mb-4 ${
+            <CardTitle className={`font-bold text-2xl md:text-3xl lg:text-4xl xl:text-5xl  mb-4 ${
             selectedOption === 1 ? 'text-zinc-700/50' : 'text-zinc-300'
 } ${isPortrait ? 'text-center' : 'self-center'}`}>
               {title1.title}
@@ -129,7 +129,7 @@ export function QuestionCard({ title1, title2, onSelect, selectedOption, showRes
           <CardHeader className={`h-full flex flex-col justify-center ${
             isPortrait ? 'text-center' : ''
           }`}>
-            <CardTitle className={`text-2xl md:text-3xl font-bold mb-4 ${
+            <CardTitle className={`text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-4 ${
   selectedOption === 0 ? 'text-zinc-700' : 'text-zinc-300'
 } ${isPortrait ? 'text-center' : 'self-center'}`}>
               {title2.title}
