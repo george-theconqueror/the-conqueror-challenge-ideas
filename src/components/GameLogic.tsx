@@ -6,8 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { QuestionCard } from "./QuestionCard"
 import { useQueueContext } from "@/contexts/QueueContext"
 import { Title } from "@/types"
-import { updateEloRatings, lowerEloRatings } from "@/lib/api"
 import { useGameState } from "@/contexts/GameStateContext"
+import { updateEloRatings, lowerEloRatings, submitGameData } from "@/lib/api"
+import Image from "next/image"
 
 export function GameLogic() {
   const { queue, dequeue, peek, isLoading, error } = useQueueContext();
@@ -131,6 +132,52 @@ export function GameLogic() {
       } catch (error) {
         console.error('Error updating Elo ratings:', error);
       }
+
+      // Submit game data with user demographics and game result only when an option is selected
+        console.log('📊 Attempting to submit game data for option selection');
+        try {
+          // Get user data from cookies via API
+          const userDataResponse = await fetch('/api/user-data');
+          console.log('🔍 User data response status:', userDataResponse.status);
+          
+          if (userDataResponse.ok) {
+            const userDataResult = await userDataResponse.json();
+            console.log('📋 User data result:', userDataResult);
+            
+            if (userDataResult.hasData && userDataResult.userData) {
+              const { gender, age, location } = userDataResult.userData;
+              console.log('👤 Extracted user data:', { gender, age, location });
+              
+              // Submit game data if we have all required user data
+              if (gender && age && location) {
+                console.log('🚀 Calling submitGameData with winner =', option);
+                const gameDataSuccess = await submitGameData(
+                  gender,
+                  age,
+                  location,
+                  title1.title,
+                  title2.title,
+                  option
+                );
+                
+                if (gameDataSuccess) {
+                  console.log('✅ Game data submitted successfully with user demographics');
+                } else {
+                  console.error('❌ Failed to submit game data');
+                }
+              } else {
+                console.log('⚠️ Missing user data for game submission:', { gender, age, location });
+              }
+            } else {
+              console.log('ℹ️ No user data found in cookies for game submission');
+            }
+          } else {
+            console.error('❌ Failed to fetch user data, status:', userDataResponse.status);
+          }
+        } catch (error) {
+          console.error('❌ Error submitting game data:', error);
+        }
+      
     }
 
     // Hide results and reset state after animation completes
@@ -197,6 +244,27 @@ export function GameLogic() {
       }
     }
   }, [gameStarted, isLoading, queue.length, currentTitles]);
+
+  // Optional: Check if user data exists (for debugging/logging purposes)
+  useEffect(() => {
+    const checkUserData = async () => {
+      try {
+        const response = await fetch('/api/user-data')
+        if (response.ok) {
+          const result = await response.json()
+          if (result.hasData) {
+            console.log('✅ User data found in cookies:', result.userData)
+          } else {
+            console.log('ℹ️ No user data found in cookies')
+          }
+        }
+      } catch (error) {
+        console.log('ℹ️ Could not check user data status')
+      }
+    }
+    
+    checkUserData()
+  }, [])
 
   if (!gameStarted) {
     return <LoadingScreen />;

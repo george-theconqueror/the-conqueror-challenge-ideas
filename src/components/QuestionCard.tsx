@@ -117,6 +117,7 @@ export function QuestionCard({ title1, title2, onSelect, selectedOption, showRes
             <CardTitle className={`font-bold text-2xl md:text-5xl mb-4 ${
             selectedOption === 1 || (showResults && selectedOption === null) ? 'text-zinc-700/50' : 'text-white'
 } ${isPortrait ? 'text-center w-full' : 'self-center text-center'}`}>
+
               {title1.title}
             </CardTitle>
           </CardHeader>
@@ -173,6 +174,7 @@ export function QuestionCard({ title1, title2, onSelect, selectedOption, showRes
             <CardTitle className={`text-2xl md:text-5xl font-bold mb-4 ${
   selectedOption === 0 || (showResults && selectedOption === null) ? 'text-zinc-700' : 'text-white'
 } ${isPortrait ? 'text-center w-full' : 'self-center text-center'}`}>
+
               {title2.title}
             </CardTitle>
           </CardHeader>

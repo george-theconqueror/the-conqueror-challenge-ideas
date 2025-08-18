@@ -279,6 +279,44 @@ function getLocalQuestions(count: number): Question[] {
   return []
 }
 
+// Submit game data with user demographics and game result
+export async function submitGameData(
+  gender: string,
+  age: number,
+  location: string,
+  title1: string,
+  title2: string,
+  winner: 0 | 1
+): Promise<boolean> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/insert-game`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        gender,
+        age,
+        location,
+        title1,
+        title2,
+        winner
+      }),
+    })
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+
+    const result = await response.json()
+    console.log('✅ Game data submission successful:', result)
+    return true
+  } catch (error) {
+    console.error('❌ Error submitting game data:', error)
+    return false
+  }
+}
+
 // Example API endpoint structure (for reference)
 export const API_ENDPOINTS = {
   // GET /api/questions?count=10
@@ -298,6 +336,11 @@ export const API_ENDPOINTS = {
   // Body: { title1_id: number, title2_id: number, winner: 0 | 1 }
   // Returns: Elo update result
   UPDATE_ELO: `${API_BASE_URL}/update-elo`,
+  
+  // POST /submit-game-data
+  // Body: { gender: string, age: number, location: string, title1: string, title2: string, winner: 0 | 1 }
+  // Returns: { success: boolean, message: string }
+  SUBMIT_GAME_DATA: `${API_BASE_URL}/submit-game-data`,
   
   // POST /add-favorite
   // Body: { title_id: number, name: string }
