@@ -295,7 +295,7 @@ export function GameLogic() {
         <Button 
           onClick={handleNoneSelected}
           disabled={gameState.selectedOption !== null || gameState.showResults}
-          className={`w-full h-full text-2xl md:text-4xl font-semibold border border-zinc-700 ${
+          className={`w-full h-full text-2xl md:text-4xl font-semibold hover:cursor-pointer border border-zinc-700 ${
             isAnimating && isInitialLoad ? 'animate-slide-in-bottom' : ''
           } ${
             gameState.selectedOption === null && !gameState.showResults

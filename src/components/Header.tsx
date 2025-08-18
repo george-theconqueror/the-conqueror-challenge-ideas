@@ -58,14 +58,14 @@ export function Header() {
               <div className="hidden md:flex items-center gap-2">
                 <Button 
                   onClick={() => setShowFavorites(true)}
-                  className="bg-black border-none font-bold hover:bg-black text-tc-500 hover:text-tc-600 transition-colors duration-200 flex items-center gap-3 px-6 py-3 text-lg"
+                  className="bg-black border-none font-bold hover:bg-black text-tc-500 hover:text-tc-600 hover:cursor-pointer transition-colors duration-200 flex items-center gap-3 px-6 py-3 text-lg"
                 >
                   <Star className="w-8 h-8 -mr-1" />
                   <span>Favorites</span>
                 </Button>
                 <Button 
                   onClick={() => setShowRules(true)}
-                  className="bg-black border-none hover:bg-black font-bold text-tc-500 hover:text-tc-600 transition-colors duration-200 flex items-center gap-3 px-6 py-3 text-lg"
+                  className="bg-black border-none hover:bg-black font-bold text-tc-500 hover:text-tc-600 hover:cursor-pointer transition-colors duration-200 flex items-center gap-3 px-6 py-3 text-lg"
                 >
                   <HelpCircle className="w-8 h-8 -mr-1" />
                   <span>How to Play</span>
@@ -79,7 +79,7 @@ export function Header() {
             </>
           ) : (
             <Link href="/">
-              <Button className="bg-tc-500 rounded-none hover:bg-tc-600 text-zinc-900 px-4 font-semibold">
+              <Button className="bg-tc-500 rounded-none hover:bg-tc-600 hover:cursor-pointer text-zinc-900 px-4 font-semibold">
                 ← Back to Game
               </Button>
             </Link>
