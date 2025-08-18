@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Lato } from "next/font/google";
 import "./globals.css";
 import { QueueProvider } from "@/contexts/QueueContext";
 import { NameProvider } from "@/contexts/NameContext";
+import { GameStateProvider } from "@/contexts/GameStateContext";
 import { lakesight, onramp } from "@/lib/fonts";
 import { Header } from "@/components/Header";
 
@@ -14,6 +15,12 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+const lato = Lato({
+  variable: "--font-lato",
+  subsets: ["latin"],
+  weight: ["100", "300", "400", "700", "900"],
 });
 
 export const metadata: Metadata = {
@@ -30,12 +37,18 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${lakesight.variable} ${onramp.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${lato.variable} ${lakesight.variable} ${onramp.variable} font-sans antialiased h-screen overflow-hidden`}
       >
         <QueueProvider>
           <NameProvider>
-            <Header />
-            {children}
+            <GameStateProvider>
+              <div className="h-screen flex flex-col overflow-hidden">
+                <Header />
+                <div className="flex-1 overflow-hidden">
+                  {children}
+                </div>
+              </div>
+            </GameStateProvider>
           </NameProvider>
         </QueueProvider>
       </body>
