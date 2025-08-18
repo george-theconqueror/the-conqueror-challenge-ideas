@@ -14,7 +14,7 @@ import { FavoritesModal } from "./FavoritesModal"
 export function Header() {
   const { gameStarted } = useGameState()
   const pathname = usePathname()
-  const [showRules, setShowRules] = useState(false)
+  const [showRules, setShowRules] = useState(true)
   const [showFavorites, setShowFavorites] = useState(false)
   
   // Show game menu only on main page
@@ -88,7 +88,7 @@ export function Header() {
       )}
       
       {/* Game Rules Dialog */}
-      {showRules && (
+      {showRules && gameStarted && (
         <GameRules onClose={() => setShowRules(false)} />
       )}
       
